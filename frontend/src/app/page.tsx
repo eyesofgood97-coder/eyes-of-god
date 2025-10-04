@@ -17,5 +17,5 @@ export default function HomePage() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }
