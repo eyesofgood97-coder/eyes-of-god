@@ -11,5 +11,3 @@ PORT_DB = os.getenv("PORT_DB")
 NAME_DB = os.getenv("NAME_DB")
 
 DATABASE_URL = f"postgresql+psycopg2://{USER_DB}:{PASSWORD_DB}@{HOST_DB}:{PORT_DB}/{NAME_DB}"
-
-SECRET_KEY = os.getenv("SECRET_KEY", "clave-secreta")
