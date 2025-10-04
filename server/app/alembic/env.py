@@ -1,10 +1,10 @@
 from logging.config import fileConfig
 
-from core.database import Base
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from core.database import DATABASE_URL
+
 from alembic import context
+from core.database import Base, DATABASE_URL
 from models.astro import Astro
 
 # this is the Alembic Config object, which provides
