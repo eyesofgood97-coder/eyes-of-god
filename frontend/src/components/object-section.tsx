@@ -3,7 +3,7 @@
 export default function ObjectSection() {
   return (
     <section
-      id="object"
+      id="objectives"
       className="relative py-24 px-6 bg-background text-foreground overflow-hidden"
     >
       <div className="max-w-6xl mx-auto text-center space-y-10">
