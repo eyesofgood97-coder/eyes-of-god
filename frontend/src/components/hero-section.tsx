@@ -1,6 +1,7 @@
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import { ParticleTextEffect } from "./particle-text-effect";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -20,13 +21,16 @@ export function HeroSection() {
           </h2>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button
-              size="lg"
-              className="bg-white hover:bg-gray-200 text-black group"
-            >
-              Start system
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <Link href="/dashboard">
+              <Button
+                size="lg"
+                className="bg-white hover:bg-gray-200 cursor-pointer"
+              >
+                Start system
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+
             <Button
               size="lg"
               variant="outline"
