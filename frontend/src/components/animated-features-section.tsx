@@ -6,7 +6,6 @@ import { BentoCard } from "./ui/bento-card";
 export function AnimatedFeaturesSection() {
   return (
     <section id="technology" className="relative py-20 px-4 bg-black overflow-hidden">
-      {/* SVG noise background filter */}
       <svg width="0" height="0" className="absolute">
         <defs>
           <filter id="noise" x="0%" y="0%" width="100%" height="100%">
@@ -40,7 +39,7 @@ export function AnimatedFeaturesSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
             <BentoCard
               title="FastAPI Framework"
