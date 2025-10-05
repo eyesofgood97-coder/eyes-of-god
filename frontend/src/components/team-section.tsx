@@ -31,6 +31,12 @@ const teamMembers = [
     availability: 85,
     contributions: 963,
   },
+  {
+    name: "YUAN RETAMOZO VILVA",
+    projects: 22,
+    availability: 55,
+    contributions: 963,
+  },
 ];
 
 export default function TeamSection() {

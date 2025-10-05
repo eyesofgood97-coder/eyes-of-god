@@ -179,22 +179,23 @@ export function ParticleTextEffect({
     const offscreenCtx = offscreenCanvas.getContext("2d")!;
 
     const isMobile = window.innerWidth < 640;
-
+    const fontSize = isMobile ? Math.min(60, canvas.width / 8) : Math.min(100, canvas.width / 6);
     offscreenCtx.fillStyle = "white";
-    offscreenCtx.font = isMobile ? "bold 60px Arial" : "bold 100px Arial";
+    offscreenCtx.font = `bold ${fontSize}px Arial`;
     offscreenCtx.textAlign = "center";
     offscreenCtx.textBaseline = "middle";
 
+    const verticalCenter = isMobile ? canvas.height * 0.4 : canvas.height / 2;
     const wordParts = word.split(" ");
+    const lineHeight = fontSize * 1.2;
     if (isMobile && wordParts.length > 1) {
-      const lineHeight = 70;
       const startY =
-        canvas.height / 3 - ((wordParts.length - 1) * lineHeight) / 2;
+        verticalCenter - ((wordParts.length - 1) * lineHeight) / 2;
       wordParts.forEach((part, i) => {
-        offscreenCtx.fillText(part, canvas.width / 3, startY + i * lineHeight);
+        offscreenCtx.fillText(part, canvas.width / 2, startY + i * lineHeight);
       });
     } else {
-      offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 3);
+      offscreenCtx.fillText(word, canvas.width / 2, verticalCenter);
     }
 
     const imageData = offscreenCtx.getImageData(
@@ -296,8 +297,8 @@ export function ParticleTextEffect({
     ctx.fillStyle = "rgba(0, 0, 20, 1)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (!(window as any)._stars) {
-      const numStars = 40;
+    const numStars = Math.max(20, Math.min(100, (canvas.width * canvas.height) / 100000));
+    if (!(window as any)._stars || (window as any)._stars.length !== numStars) {
       (window as any)._stars = Array.from({ length: numStars }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -329,7 +330,7 @@ export function ParticleTextEffect({
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     const centerX = (rect.width / 2) * scaleX;
-    const centerY = (rect.height / 2) * scaleY;
+    const centerY = (rect.height / 2.6) * scaleY;
 
     const blackHoleRadius =
       Math.min(canvas.width, canvas.height) * (isMobile ? 0.22 : 0.25);
@@ -426,8 +427,8 @@ export function ParticleTextEffect({
       mouseRef.current.isPressed = true;
       mouseRef.current.isRightClick = e.button === 2;
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      mouseRef.current.y = (e.clientY - rect.top) * (canvas.height / rect.height);
     };
 
     const handleMouseUp = () => {
@@ -437,8 +438,8 @@ export function ParticleTextEffect({
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      mouseRef.current.y = (e.clientY - rect.top) * (canvas.height / rect.height);
     };
 
     const handleContextMenu = (e: MouseEvent) => {
@@ -466,13 +467,13 @@ export function ParticleTextEffect({
       canvas.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [words]);
 
   return (
     <div className="w-full h-full absolute inset-0">
       <canvas
         ref={canvasRef}
-        className="w-[600px] sm:w-full h-full"
+        className="w-full h-full"
         style={{ background: "black", zIndex: 10 }}
       />
     </div>
