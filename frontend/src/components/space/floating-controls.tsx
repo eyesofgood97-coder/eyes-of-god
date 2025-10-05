@@ -1,4 +1,4 @@
-import { Search, Menu, User, Plus, ZoomIn, ZoomOut, Home, MoreHorizontal } from 'lucide-react';
+import { Search, Menu, User, Plus } from 'lucide-react';
 import { Button } from '../ui/button';
 import { motion } from 'motion/react';
 
@@ -18,10 +18,6 @@ export function FloatingControls({
   onSearchClick,
   onMenuClick,
   onUploadClick,
-  onZoomIn,
-  onZoomOut,
-  onResetView,
-  zoom
 }: FloatingControlsProps) {
   return (
     <>

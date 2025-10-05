@@ -44,7 +44,7 @@ export default function SpaceExplorer() {
         console.log('Zoom level:', zoomLevel)
         setSelectedTile(tileMetadata)
       }}
-      onTileHover={(tileMetadata, zoomLevel) => {
+      onTileHover={(tileMetadata) => {
         if (tileMetadata) {
           console.log('Hovering tile at:', tileMetadata.position)
         }

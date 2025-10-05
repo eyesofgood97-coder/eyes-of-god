@@ -4,8 +4,7 @@ import { FloatingControls } from "@/components/space/floating-controls";
 import { ImageViewerPanel } from "@/components/space/image-viewer-panel";
 import { NavigationMenu } from "@/components/space/navigation-menu";
 import { SearchPanel } from "@/components/space/search-panel";
-import { SpaceBackground } from "@/components/space/space-background";
-import { SpaceImage, SpaceMap } from "@/components/space/space-map";
+import { SpaceImage } from "@/components/space/space-map";
 import { UploadPanel } from "@/components/space/upload-panel";
 import { allSpaceImages } from "@/mock/mock-images";
 import { useState, useCallback } from "react";
@@ -30,10 +29,6 @@ export default function App() {
   const handleImageClick = useCallback((image: SpaceImage) => {
     setSelectedImage(image);
     setIsImageViewerOpen(true);
-  }, []);
-
-  const handleMapClick = useCallback((x: number, y: number) => {
-    console.log("Map clicked at:", x, y);
   }, []);
 
   // Control handlers
