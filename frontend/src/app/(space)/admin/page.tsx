@@ -132,16 +132,6 @@ export default function App() {
 
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Space Background */}
-      <SpaceBackground />
-
-      {/* Main Space Map */}
-      <SpaceMap
-        images={spaceImages}
-        onImageClick={handleImageClick}
-        onMapClick={handleMapClick}
-      />
-
       {/* Floating Controls */}
       <FloatingControls
         isAdmin={isAdmin}
