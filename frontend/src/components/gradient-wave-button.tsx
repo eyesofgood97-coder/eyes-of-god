@@ -10,7 +10,7 @@ export const StartButton: React.FC<{ label?: string }> = ({
   return (
     <div className="flex items-center justify-center">
       <div className="relative group">
-        <Link href="/dashboard">
+        <Link href="/main">
           <button
             className="relative inline-block p-px font-semibold leading-6 text-white 
                        bg-neutral-900 shadow-2xl cursor-pointer rounded-lg 

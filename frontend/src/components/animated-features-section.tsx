@@ -5,7 +5,7 @@ import { BentoCard } from "./ui/bento-card";
 
 export function AnimatedFeaturesSection() {
   return (
-    <section id="technology" className="relative py-20 px-4 bg-black overflow-hidden">
+    <section id="technology" className="relative py-20 px-4 bg-background overflow-hidden">
       <svg width="0" height="0" className="absolute">
         <defs>
           <filter id="noise" x="0%" y="0%" width="100%" height="100%">

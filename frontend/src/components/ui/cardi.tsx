@@ -15,7 +15,7 @@ export default function CardI({
   contributions,
 }: CardIProps) {
   return (
-    <div className="group relative w-[240px] rounded-2xl bg-background overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-[0_0_25px_rgba(56,189,248,0.6)]">
+    <div className="group relative w-full rounded-2xl bg-background overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-[0_0_25px_rgba(56,189,248,0.6)]">
 
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-800 opacity-0 blur-md group-hover:opacity-60 transition-opacity duration-700"></div>
 
