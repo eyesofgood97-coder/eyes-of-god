@@ -14,7 +14,7 @@ const teamMembers = [
     contributions: 1574,
   },
   {
-    name: "ALBETH JAYME ARONE",
+    name: "ALBERT JAYME ARONE",
     projects: 29,
     availability: 92,
     contributions: 1206,

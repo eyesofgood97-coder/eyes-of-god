@@ -23,7 +23,6 @@ export function Header() {
     }
   };
 
-  // Manejo de scroll (para ocultar header)
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -42,7 +41,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  // Desplazamiento interno
   const scrollToSection = (id: string) => {
     if (!id) return;
     const element = document.querySelector(id);
@@ -54,7 +52,6 @@ export function Header() {
     }
   };
 
-  // 🚀 Navegación + cambio de fondo
   const handleNavigation = (label: string, id: string) => {
     if (id.startsWith("#")) {
       scrollToSection(id);
@@ -96,12 +93,10 @@ export function Header() {
               : "bg-background/95 backdrop-blur-lg border-border/30 shadow-lg"
           }`}
       >
-        {/* Logo */}
         <div className="transform transition-transform duration-200 hover:scale-105 cursor-pointer" onClick={() => handleNavigation("Home", "home")}>
           <LeLoLogo />
         </div>
 
-        {/* Navegación */}
         <nav className="hidden md:flex items-center gap-6">
           {links.map((link) => (
             <button
