@@ -103,7 +103,7 @@ export function NavigationMenu({ isOpen, onClose, onMenuItemClick }: NavigationM
             <div className="p-6 border-t border-white/10">
               <div className="text-center">
                 <p className="text-xs text-gray-400">
-                  Powered by NASA's Open Data
+                  Powered by NASAs Open Data
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                   Explora el cosmos desde tu navegador

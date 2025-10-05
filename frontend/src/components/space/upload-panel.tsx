@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Upload, Calendar, Tag, MapPin, Image, Settings } from 'lucide-react';

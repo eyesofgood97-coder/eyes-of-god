@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Search, MapPin, Image, Filter, Tag, Calendar, Satellite } from 'lucide-react';
+import { X, Search, MapPin, Filter, Tag } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
