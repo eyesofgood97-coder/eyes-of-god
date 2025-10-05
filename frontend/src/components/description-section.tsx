@@ -18,16 +18,21 @@ export default function DescriptionSection() {
           </span>{" "}
           that brings{" "}
           <span className="text-primary/90">
-            NASA’s ultra-high-resolution satellite imagery
+            NASA’s ultra-high-resolution astronomical imagery
           </span>{" "}
           closer to everyone. Each capture reveals the vastness and hidden
-          beauty of our Solar System — from the swirling storms of Jupiter to
-          the dynamic patterns of our own Earth.
+          beauty of the <strong className="text-foreground">universe</strong> —
+          from distant galaxies and nebulae to the intricate cosmic structures
+          that shape the fabric of space itself.
         </p>
 
         <p className="text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed">
-          The challenge lies in managing massive datasets: gigabytes of rich
-          planetary imagery that cannot be rendered easily on standard devices.{" "}
+          The challenge lies in managing{" "}
+          <span className="text-foreground font-medium">
+            massive astronomical datasets
+          </span>{" "}
+          — terabytes of high-resolution cosmic imagery and deep-space
+          observations that are far too heavy to render on standard devices.{" "}
           <br />
           Our solution is a{" "}
           <span className="text-primary font-medium">
@@ -35,10 +40,10 @@ export default function DescriptionSection() {
           </span>
           , optimized for{" "}
           <span className="text-primary/90 font-medium">
-            performance, accessibility, and scientific exploration
+            performance, accessibility, and scientific discovery
           </span>
-          — allowing anyone to explore NASA’s visual data in real time, from any
-          device.
+          — allowing anyone to explore NASA’s visual universe in real time, from
+          any device.
         </p>
 
         <p className="text-sm tracking-wider text-muted-foreground/70 mt-6">
