@@ -165,7 +165,7 @@ export default function SpaceExplorer({ isAdmin }: { isAdmin: boolean }) {
       <SpaceRender
         tilesBasePath="/tiles/andromeda"
         initialZoom={2}
-        showDebugInfo={false}
+        showDebugInfo={true}
         onTileClick={handleTileClick}
       >
         {/* Floating Controls */}
