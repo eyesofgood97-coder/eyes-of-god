@@ -441,9 +441,12 @@ const SpaceRender = ({
           imageRendering: 'auto'
         }}
       >
+        // Reemplaza esta sección en tu space-render.tsx (líneas ~365-410)
+
         {Array.from(visibleTiles).map((tileKey) => {
           const [z, row, col] = tileKey.split('-').map(Number)
           const tileMetadata = getTileMetadata(z, row, col)
+          const tileUrl = getTileUrl(z, row, col)
           
           return (
             <div
@@ -455,12 +458,29 @@ const SpaceRender = ({
                 width: tileSize,
                 height: tileSize
               }}
-              onClick={() => tileMetadata && handleTileClick(tileMetadata)}
-              onMouseEnter={() => tileMetadata && handleTileHover(tileMetadata)}
+              onClick={() => {
+                if (tileMetadata) {
+                  const tileWithUrl = {
+                    ...tileMetadata,
+                    url: tileUrl
+                  }
+                  console.log('🎯 Tile clicked with URL:', tileWithUrl)
+                  handleTileClick(tileWithUrl)
+                }
+              }}
+              onMouseEnter={() => {
+                if (tileMetadata) {
+                  const tileWithUrl = {
+                    ...tileMetadata,
+                    url: tileUrl
+                  }
+                  handleTileHover(tileWithUrl)
+                }
+              }}
               onMouseLeave={() => handleTileHover(null)}
             >
               <img
-                src={getTileUrl(z, row, col)}
+                src={tileUrl}
                 alt={`Tile ${tileKey}`}
                 className="w-full h-full"
                 style={{
@@ -470,7 +490,7 @@ const SpaceRender = ({
                 loading="lazy"
                 draggable={false}
                 onError={(e) => {
-                  console.error(`Error cargando tile: ${getTileUrl(z, row, col)}`)
+                  console.error(`Error cargando tile: ${tileUrl}`)
                   ;(e.target as HTMLImageElement).style.opacity = '0.3'
                 }}
               />
