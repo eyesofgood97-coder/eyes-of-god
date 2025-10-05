@@ -14,8 +14,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <SpaceRender>
-      {children}
-    </SpaceRender>
+    <div className="w-screen h-screen">
+      <SpaceRender
+        tilesBasePath="/tiles/andromeda"
+        initialZoom={2}
+        showDebugInfo={true}
+      >
+        <div className="absolute top-20 right-6 z-50">
+          {children}
+        </div>
+      </SpaceRender>
+    </div>
   );
 }
