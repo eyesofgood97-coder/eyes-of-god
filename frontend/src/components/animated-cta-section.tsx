@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { Button } from "./ui/button";
-import { ArrowRight } from "lucide-react";
 import { BackgroundPaths } from "./ui/floating-paths";
 
 export function AnimatedCTASection() {
