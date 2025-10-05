@@ -325,7 +325,6 @@ export function ParticleTextEffect({
     }
 
     const isMobile = window.innerWidth < 640;
-
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
