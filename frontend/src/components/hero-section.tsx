@@ -21,14 +21,6 @@ export function HeroSection() {
 
           <div className="flex flex-col sm:flex-row gap-6 items-center justify-center mb-12">
             <StartButton label="Start system" />
-
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-gray-600 text-white hover:bg-gray-800 bg-transparent"
-            >
-              View Simulation
-            </Button>
           </div>
         </div>
       </div>
