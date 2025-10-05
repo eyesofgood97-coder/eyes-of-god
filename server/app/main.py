@@ -1,19 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api import astro
+from routes.route import include_routes
 
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins = ["*"],
-    allow_credentials = True,
-    allow_methods = ["*"],
-    allow_headers = ["*"]
+app = FastAPI(
+    title="Mi API",
+    description="API con rutas organizadas",
+    version="1.0.0"
 )
 
-#  uvicorn main:app --host 0.0.0.0 --port 8000
-# npx tunnelmole 8000
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
-
-app.include_router(astro.router, prefix="/astro")
+# Incluir todas las rutas
+include_routes(app)

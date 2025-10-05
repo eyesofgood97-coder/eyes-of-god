@@ -9,5 +9,7 @@ PASSWORD_DB = os.getenv("PASSWORD_DB")
 HOST_DB = os.getenv("HOST_DB")
 PORT_DB = os.getenv("PORT_DB")
 NAME_DB = os.getenv("NAME_DB")
+EARTHDATA_USERNAME = os.getenv("EARTHDATA_USERNAME")
+EARTHDATA_PASSWORD = os.getenv("EARTHDATA_PASSWORD")
 
 DATABASE_URL = f"postgresql+psycopg2://{USER_DB}:{PASSWORD_DB}@{HOST_DB}:{PORT_DB}/{NAME_DB}"
