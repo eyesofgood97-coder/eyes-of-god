@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 import { useState } from "react";
 import MainVisualization from "./main-visualization";
@@ -13,3 +14,12 @@ export default function DashboardPage() {
     </div>
   );
 }
+=======
+export default function Page() {
+    return (
+        <div>
+            Holaaa
+        </div>
+    )
+}
+>>>>>>> origin/miguel
