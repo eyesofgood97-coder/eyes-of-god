@@ -139,7 +139,7 @@ interface ParticleTextEffectProps {
   words?: string[];
 }
 
-const DEFAULT_WORDS = ["LeLo", "SAAS", "PLATFORM", "LELO"];
+const DEFAULT_WORDS = ["EYES OF GOD"];
 
 export function ParticleTextEffect({
   words = DEFAULT_WORDS,

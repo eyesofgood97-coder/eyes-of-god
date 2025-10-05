@@ -10,7 +10,7 @@ export function Footer() {
       <div className="container mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1 md:col-span-2 space-y-4">
-            <LeLoLogo className="h-10 w-auto mb-4" />
+            <LeLoLogo />
             <p className="text-white/70 max-w-md leading-relaxed">
               <span className="font-semibold text-primary">Eyes of God</span> is
               a web-based visualization platform developed during the{" "}

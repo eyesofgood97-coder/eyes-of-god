@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HeroSection } from "@/components/hero-section";
 import ObjectSection from "@/components/object-section";
+import TeamSection from "@/components/team-section";
 
 export default function HomePage() {
   return (
@@ -14,8 +15,9 @@ export default function HomePage() {
         <DescriptionSection />
         <ObjectSection />
         <AnimatedFeaturesSection />
+        <TeamSection />
       </main>
       <Footer />
     </div>
-  )
+  );
 }
