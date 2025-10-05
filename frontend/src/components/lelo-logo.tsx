@@ -1,13 +1,11 @@
-export function LeLoLogo({ className = "" }: { className?: string }) {
+import { Eye } from "lucide-react";
+
+export function LeLoLogo() {
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
-      <div className="relative">
-        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-          <div className="w-4 h-4 bg-background rounded-sm transform rotate-45"></div>
-        </div>
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full"></div>
-      </div>
+    <div className="flex items-center space-x-2">
+      <Eye />
       <span className="text-xl font-bold text-foreground">EoG</span>
+      <div className="absolute inset-0 rounded-full blur-lg bg-blue-500/20 opacity-0 hover:opacity-100 transition duration-700" />
     </div>
-  )
+  );
 }

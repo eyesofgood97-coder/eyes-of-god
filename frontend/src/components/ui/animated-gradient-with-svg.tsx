@@ -20,7 +20,6 @@ const AnimatedGradient: React.FC<AnimatedGradientProps> = ({
   speed = 5,
   blur = "light",
 }) => {
-  // ✅ Los hooks siempre deben ejecutarse, nunca condicionalmente
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useDimensions(containerRef as React.RefObject<HTMLElement>);
   const [mounted, setMounted] = useState(false);
@@ -29,9 +28,8 @@ const AnimatedGradient: React.FC<AnimatedGradientProps> = ({
     setMounted(true);
   }, []);
 
-  // 🎲 Los valores aleatorios se generan solo cuando el cliente está montado
   const randomValues = useMemo(() => {
-    if (!mounted) return []; // Evita mismatches en SSR
+    if (!mounted) return [];
     return colors.map(() => ({
       top: Math.random() * 50,
       left: Math.random() * 50,
@@ -62,7 +60,6 @@ const AnimatedGradient: React.FC<AnimatedGradientProps> = ({
       ? "blur-3xl"
       : "blur-[100px]";
 
-  // 🔒 Hasta que se monte el cliente, no renderizamos nada visual
   if (!mounted) return <div className="absolute inset-0" ref={containerRef} />;
 
   return (
