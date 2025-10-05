@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useCallback, useState } from 'react'
@@ -9,7 +10,6 @@ import { NavigationMenu } from './navigation-menu'
 import { TileAnalysisPanel } from './tiles-analysis-panel'
 import { SearchPanel } from './search-panel'
 import { UploadPanel } from './upload-panel'
-import { ImageViewerPanel } from './image-viewer-panel'
 
 interface TileMetadata {
   path: string
@@ -46,7 +46,6 @@ export default function SpaceExplorer({ isAdmin }: { isAdmin: boolean }) {
   const [selectedTileUrl, setSelectedTileUrl] = useState<string | null>(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isUploadOpen, setIsUploadOpen] = useState(false)
-  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false)
 
   // Celestial object info (from metadata)
   const celestialObject = {

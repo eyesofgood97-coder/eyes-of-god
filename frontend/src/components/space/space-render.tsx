@@ -443,8 +443,6 @@ const SpaceRender = ({
           imageRendering: 'auto'
         }}
       >
-        // Reemplaza esta sección en tu space-render.tsx (líneas ~365-410)
-
         {Array.from(visibleTiles).map((tileKey) => {
           const [z, row, col] = tileKey.split('-').map(Number)
           const tileMetadata = getTileMetadata(z, row, col)
