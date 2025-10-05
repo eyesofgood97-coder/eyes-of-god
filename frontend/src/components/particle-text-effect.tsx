@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -177,11 +178,24 @@ export function ParticleTextEffect({
     offscreenCanvas.height = canvas.height;
     const offscreenCtx = offscreenCanvas.getContext("2d")!;
 
+    const isMobile = window.innerWidth < 640;
+
     offscreenCtx.fillStyle = "white";
-    offscreenCtx.font = "bold 100px Arial";
+    offscreenCtx.font = isMobile ? "bold 60px Arial" : "bold 100px Arial";
     offscreenCtx.textAlign = "center";
     offscreenCtx.textBaseline = "middle";
-    offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 3);
+
+    const wordParts = word.split(" ");
+    if (isMobile && wordParts.length > 1) {
+      const lineHeight = 70;
+      const startY =
+        canvas.height / 3 - ((wordParts.length - 1) * lineHeight) / 2;
+      wordParts.forEach((part, i) => {
+        offscreenCtx.fillText(part, canvas.width / 3, startY + i * lineHeight);
+      });
+    } else {
+      offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 3);
+    }
 
     const imageData = offscreenCtx.getImageData(
       0,
@@ -279,9 +293,81 @@ export function ParticleTextEffect({
 
     const ctx = canvas.getContext("2d")!;
     const particles = particlesRef.current;
-
-    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+    ctx.fillStyle = "rgba(0, 0, 20, 1)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (!(window as any)._stars) {
+      const numStars = 40;
+      (window as any)._stars = Array.from({ length: numStars }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.2 + 0.5,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.02 + Math.random() * 0.015,
+      }));
+    }
+
+    const stars = (window as any)._stars as {
+      x: number;
+      y: number;
+      radius: number;
+      phase: number;
+      speed: number;
+    }[];
+
+    for (const star of stars) {
+      star.phase += star.speed;
+      const alpha = 0.3 + 0.7 * Math.abs(Math.sin(star.phase));
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.fill();
+    }
+
+    const isMobile = window.innerWidth < 640;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const centerX = (rect.width / 2) * scaleX;
+    const centerY = (rect.height / 2) * scaleY;
+
+    const blackHoleRadius =
+      Math.min(canvas.width, canvas.height) * (isMobile ? 0.22 : 0.25);
+
+    const accretionGradient = ctx.createRadialGradient(
+      centerX,
+      centerY,
+      blackHoleRadius * 0.9,
+      centerX,
+      centerY,
+      blackHoleRadius * 1.8
+    );
+    accretionGradient.addColorStop(0.0, "rgba(0, 0, 0, 0)");
+    accretionGradient.addColorStop(0.4, "rgba(60, 100, 180, 0.08)");
+    accretionGradient.addColorStop(0.7, "rgba(100, 150, 255, 0.15)");
+    accretionGradient.addColorStop(1.0, "rgba(0, 0, 0, 0)");
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, blackHoleRadius * 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = accretionGradient;
+    ctx.fill();
+
+    const outerGlow = ctx.createRadialGradient(
+      centerX,
+      centerY,
+      blackHoleRadius * 1.2,
+      centerX,
+      centerY,
+      blackHoleRadius * 2.5
+    );
+    outerGlow.addColorStop(0, "rgba(80, 120, 255, 0.07)");
+    outerGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, blackHoleRadius * 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = outerGlow;
+    ctx.fill();
 
     for (let i = particles.length - 1; i >= 0; i--) {
       const particle = particles[i];
