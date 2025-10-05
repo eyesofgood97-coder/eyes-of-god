@@ -35,12 +35,12 @@ const teamMembers = [
 
 export default function TeamSection() {
   return (
-    <section className="w-full py-16 bg-background flex flex-col items-center">
+    <section className="w-full max-w-5xl py-16 bg-background flex flex-col items-center justify-center mx-auto">
       <h2 className="text-2xl sm:text-3xl font-bold text-white mb-10 tracking-wide">
         DEVELOPMENT TEAM
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-18">
         {teamMembers.map((member, i) => (
           <CardI
             key={i}

@@ -4,7 +4,7 @@ export default function DescriptionSection() {
   return (
     <section
       id="description"
-      className="relative py-20 px-6 bg-gradient-to-b from-background via-gray-900 to-background text-white overflow-hidden"
+      className="relative py-20 px-6 bg-gradient-to-b from-[#000014] via-gray-900 to-background text-white overflow-hidden"
     >
       <div className="max-w-5xl mx-auto text-center space-y-8">
         <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary">
