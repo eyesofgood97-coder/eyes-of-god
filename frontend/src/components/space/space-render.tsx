@@ -2,6 +2,34 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 
+interface TileMetadata {
+  path: string
+  size: number
+  hash: string
+  position: {
+    col: number
+    row: number
+    x: number
+    y: number
+  }
+  dimensions: {
+    width: number
+    height: number
+  }
+  content: {
+    avg_brightness: number
+    is_empty: boolean
+    has_content: boolean
+    original_coords: {
+      x: number
+      y: number
+      width: number
+      height: number
+    }
+  }
+  url: string
+}
+
 interface Metadata {
   version: string
   generated_at: string
@@ -26,15 +54,7 @@ interface Metadata {
     megapixels: number
     gigapixels?: number
   }
-  spatial_data?: {
-    coordinates?: any
-    coordinate_system?: string
-    right_ascension?: number
-    declination?: number
-    cartesian?: any
-    distance_from_earth?: number
-    distance_unit?: string
-  }
+  spatial_data?: any
   celestial_object?: {
     name: string
     type: string
@@ -43,17 +63,7 @@ interface Metadata {
     constellation?: string
     magnitude?: number
   }
-  capture_info?: {
-    date?: string
-    time_utc?: string
-    exposure_time?: string
-    satellite_telescope?: string
-    instrument?: string
-    filters?: string[]
-    wavelength?: string
-    mission?: string
-    observer?: string
-  }
+  capture_info?: any
   tags?: string[]
   description?: string
   visibility?: string
@@ -66,6 +76,13 @@ interface Metadata {
       y: number
     }
   }
+  tiles: {
+    [zoomLevel: string]: {
+      [row: string]: {
+        [col: string]: TileMetadata
+      }
+    }
+  }
 }
 
 interface SpaceRenderProps {
@@ -74,6 +91,8 @@ interface SpaceRenderProps {
   metadataUrl?: string
   initialZoom?: number
   showDebugInfo?: boolean
+  onTileClick?: (tileMetadata: TileMetadata, zoomLevel: number) => void
+  onTileHover?: (tileMetadata: TileMetadata | null, zoomLevel: number) => void
 }
 
 const SpaceRender = ({ 
@@ -81,7 +100,9 @@ const SpaceRender = ({
   tilesBasePath,
   metadataUrl,
   initialZoom = 0,
-  showDebugInfo = false
+  showDebugInfo = false,
+  onTileClick,
+  onTileHover
 }: SpaceRenderProps) => {
   const canvasRef = useRef<HTMLDivElement>(null)
   const [metadata, setMetadata] = useState<Metadata | null>(null)
@@ -93,6 +114,7 @@ const SpaceRender = ({
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [visibleTiles, setVisibleTiles] = useState<Set<string>>(new Set())
+  const [hoveredTile, setHoveredTile] = useState<TileMetadata | null>(null)
 
   // Cargar metadata
   useEffect(() => {
@@ -109,9 +131,7 @@ const SpaceRender = ({
         const data: Metadata = await response.json()
         setMetadata(data)
         
-        // Establecer zoom inicial (nivel 0 = más alejado)
         setZoom(initialZoom)
-        
         setLoading(false)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido')
@@ -134,14 +154,13 @@ const SpaceRender = ({
     const zoomLevelData = metadata.zoom_levels[zoom]
     if (!zoomLevelData) return
     
-    // Centrar la imagen en el contenedor
     setPosition({
       x: (containerWidth - zoomLevelData.width) / 2,
       y: (containerHeight - zoomLevelData.height) / 2
     })
   }, [metadata, zoom])
 
-  // Calcular qué tiles son visibles en el viewport actual
+  // Calcular qué tiles son visibles
   const calculateVisibleTiles = useCallback(() => {
     if (!canvasRef.current || !metadata) return new Set<string>()
 
@@ -154,7 +173,6 @@ const SpaceRender = ({
 
     const tileSize = metadata.tile_size
 
-    // Calcular los índices de tiles visibles
     const startCol = Math.max(0, Math.floor(-position.x / tileSize))
     const endCol = Math.min(zoomLevelData.cols - 1, Math.ceil((containerWidth - position.x) / tileSize))
     const startRow = Math.max(0, Math.floor(-position.y / tileSize))
@@ -171,13 +189,17 @@ const SpaceRender = ({
     return tiles
   }, [zoom, position, metadata])
 
-  // Actualizar tiles visibles cuando cambia zoom o posición
   useEffect(() => {
     const tiles = calculateVisibleTiles()
     setVisibleTiles(tiles)
   }, [calculateVisibleTiles])
 
-  // Manejar zoom con rueda del mouse
+  // Obtener metadata del tile
+  const getTileMetadata = useCallback((zoomLevel: number, row: number, col: number): TileMetadata | null => {
+    if (!metadata?.tiles?.[zoomLevel]?.[row]?.[col]) return null
+    return metadata.tiles[zoomLevel][row][col]
+  }, [metadata])
+
   const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault()
     
@@ -188,7 +210,6 @@ const SpaceRender = ({
     const mouseX = e.clientX - rect.left
     const mouseY = e.clientY - rect.top
 
-    // Reducir sensibilidad del zoom
     const delta = e.deltaY > 0 ? -1 : 1
     const maxZoom = metadata.zoom_levels.length - 1
     const newZoom = Math.max(0, Math.min(maxZoom, zoom + delta))
@@ -199,10 +220,7 @@ const SpaceRender = ({
       
       if (!oldZoomData || !newZoomData) return
 
-      // Calcular la escala entre niveles
       const scale = newZoomData.width / oldZoomData.width
-
-      // Ajustar posición para hacer zoom hacia el cursor
       const newX = mouseX - (mouseX - position.x) * scale
       const newY = mouseY - (mouseY - position.y) * scale
 
@@ -211,14 +229,12 @@ const SpaceRender = ({
     }
   }, [zoom, position, metadata])
 
-  // Manejar inicio de arrastre
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     setIsDragging(true)
     setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y })
   }, [position])
 
-  // Manejar movimiento durante arrastre
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isDragging) return
 
@@ -229,12 +245,10 @@ const SpaceRender = ({
     setPosition({ x: newX, y: newY })
   }, [isDragging, dragStart])
 
-  // Finalizar arrastre
   const handleMouseUp = useCallback(() => {
     setIsDragging(false)
   }, [])
 
-  // Manejar arrastre táctil
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       const touch = e.touches[0]
@@ -258,7 +272,6 @@ const SpaceRender = ({
     setIsDragging(false)
   }, [])
 
-  // Agregar event listener para la rueda
   useEffect(() => {
     const container = canvasRef.current
     if (!container) return
@@ -270,20 +283,16 @@ const SpaceRender = ({
     }
   }, [handleWheel])
 
-  // Función para obtener URL del tile
   const getTileUrl = (zoomLevel: number, row: number, col: number): string => {
     if (!metadata) return ''
     
-    // Determinar extensión según formato
     const ext = metadata.format === 'JPEG' ? 'jpg' : 
                 metadata.format === 'PNG' ? 'png' : 
                 metadata.format === 'WEBP' ? 'webp' : 'jpg'
     
-    // Formato: /path/to/tiles/{z}/{row}/{col}.ext
     return `${tilesBasePath}/${zoomLevel}/${row}/${col}.${ext}`
   }
 
-  // Función para resetear vista
   const resetView = useCallback(() => {
     if (!metadata || !canvasRef.current) return
     
@@ -302,7 +311,6 @@ const SpaceRender = ({
     })
   }, [metadata, initialZoom])
 
-  // Zoom in/out manual
   const handleZoomIn = useCallback(() => {
     if (!metadata) return
     const maxZoom = metadata.zoom_levels.length - 1
@@ -347,6 +355,21 @@ const SpaceRender = ({
       setPosition({ x: newX, y: newY })
     }
   }, [zoom, metadata, position])
+
+  // Manejar click en tile
+  const handleTileClick = useCallback((tileMetadata: TileMetadata) => {
+    if (onTileClick) {
+      onTileClick(tileMetadata, zoom)
+    }
+  }, [onTileClick, zoom])
+
+  // Manejar hover en tile
+  const handleTileHover = useCallback((tileMetadata: TileMetadata | null) => {
+    setHoveredTile(tileMetadata)
+    if (onTileHover) {
+      onTileHover(tileMetadata, zoom)
+    }
+  }, [onTileHover, zoom])
 
   if (loading) {
     return (
@@ -420,17 +443,21 @@ const SpaceRender = ({
       >
         {Array.from(visibleTiles).map((tileKey) => {
           const [z, row, col] = tileKey.split('-').map(Number)
+          const tileMetadata = getTileMetadata(z, row, col)
           
           return (
             <div
               key={tileKey}
-              className="absolute"
+              className="absolute group"
               style={{
                 left: col * tileSize,
                 top: row * tileSize,
                 width: tileSize,
                 height: tileSize
               }}
+              onClick={() => tileMetadata && handleTileClick(tileMetadata)}
+              onMouseEnter={() => tileMetadata && handleTileHover(tileMetadata)}
+              onMouseLeave={() => handleTileHover(null)}
             >
               <img
                 src={getTileUrl(z, row, col)}
@@ -447,6 +474,17 @@ const SpaceRender = ({
                   ;(e.target as HTMLImageElement).style.opacity = '0.3'
                 }}
               />
+              
+              {/* Overlay de hover para mostrar info del tile */}
+              {showDebugInfo && tileMetadata && (
+                <div className="absolute inset-0 bg-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-cyan-400/50">
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/80 text-white text-[8px] p-1">
+                    <div>Col: {col}, Row: {row}</div>
+                    <div>Brightness: {tileMetadata.content.avg_brightness}</div>
+                    <div>Size: {(tileMetadata.size / 1024).toFixed(1)}KB</div>
+                  </div>
+                </div>
+              )}
             </div>
           )
         })}
@@ -507,15 +545,63 @@ const SpaceRender = ({
         )}
       </div>
 
-      {/* Indicador de debug */}
+      {/* Panel de información del tile hovereado */}
+      {hoveredTile && !showDebugInfo && (
+        <div className="absolute top-20 left-6 bg-black/70 backdrop-blur-sm px-4 py-3 rounded-lg border border-cyan-400/30 text-white z-50 max-w-sm">
+          <h4 className="font-semibold text-sm mb-2 text-cyan-400">Información del Tile</h4>
+          <div className="text-xs space-y-1">
+            <div className="flex justify-between">
+              <span className="text-gray-400">Posición:</span>
+              <span className="font-mono">({hoveredTile.position.col}, {hoveredTile.position.row})</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Coordenadas originales:</span>
+              <span className="font-mono">
+                ({hoveredTile.content.original_coords.x}, {hoveredTile.content.original_coords.y})
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Brillo promedio:</span>
+              <span>{hoveredTile.content.avg_brightness.toFixed(1)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Tamaño:</span>
+              <span>{(hoveredTile.size / 1024).toFixed(1)} KB</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Estado:</span>
+              <span className={hoveredTile.content.is_empty ? "text-red-400" : "text-green-400"}>
+                {hoveredTile.content.is_empty ? "Vacío" : "Con contenido"}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Hash:</span>
+              <span className="font-mono text-[10px]">{hoveredTile.hash}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Indicador de debug completo */}
       {showDebugInfo && currentZoomData && (
         <div className="absolute top-6 right-6 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/20 text-white text-xs z-40 font-mono space-y-1">
+          <div className="font-semibold text-cyan-400 mb-2">Debug Info</div>
           <div>Zoom Level: {zoom}</div>
           <div>Position: ({Math.round(position.x)}, {Math.round(position.y)})</div>
           <div>Tiles Visibles: {visibleTiles.size}</div>
           <div>Dimensiones: {currentZoomData.width}x{currentZoomData.height}</div>
           <div>Grid: {currentZoomData.cols}x{currentZoomData.rows}</div>
           <div>Tile Size: {tileSize}px</div>
+          {hoveredTile && (
+            <>
+              <div className="border-t border-white/20 mt-2 pt-2">
+                <div className="font-semibold text-cyan-400 mb-1">Tile Actual:</div>
+                <div>Pos: ({hoveredTile.position.col}, {hoveredTile.position.row})</div>
+                <div>Hash: {hoveredTile.hash}</div>
+                <div>Brightness: {hoveredTile.content.avg_brightness.toFixed(1)}</div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
