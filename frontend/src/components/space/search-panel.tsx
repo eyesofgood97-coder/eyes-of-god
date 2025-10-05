@@ -11,8 +11,8 @@ import { SpaceImage } from './space-map';
 interface SearchPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onImageSelect: (image: SpaceImage) => void;
-  images: SpaceImage[];
+  onImageSelect?: (image: SpaceImage) => void;
+  images?: SpaceImage[];
 }
 
 export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPanelProps) {
@@ -24,7 +24,7 @@ export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPa
   const popularTags = ['nebula', 'galaxy', 'planetary', 'hubble', 'jwst', 'mars', 'jupiter', 'saturn'];
   const objectTypes = ['planet', 'galaxy', 'nebula', 'star', 'moon', 'asteroid'];
 
-  const filteredImages = images.filter(image => {
+  const filteredImages = (images || []).filter(image => {
     const matchesQuery = searchQuery === '' || 
       image.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       image.object.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -212,7 +212,7 @@ export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPa
                       animate={{ opacity: 1, y: 0 }}
                       className="bg-white/5 border border-white/10 rounded-lg p-3 cursor-pointer hover:border-cyan-500/50 hover:bg-white/10 transition-all group"
                       onClick={() => {
-                        onImageSelect(image);
+                        onImageSelect?.(image);
                         onClose();
                       }}
                     >

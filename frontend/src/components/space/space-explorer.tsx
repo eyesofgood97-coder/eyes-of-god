@@ -1,7 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import SpaceRender from '@/components/space/space-render'
+import { toast, Toaster } from 'sonner'
+import { analyzeTileWithAI } from '@/actions/gemini'
+import { FloatingControls } from './floating-controls'
+import { NavigationMenu } from './navigation-menu'
+import { TileAnalysisPanel } from './tiles-analysis-panel'
+import { SearchPanel } from './search-panel'
+import { UploadPanel } from './upload-panel'
+import { ImageViewerPanel } from './image-viewer-panel'
 
 interface TileMetadata {
   path: string
@@ -31,93 +39,195 @@ interface TileMetadata {
   url: string
 }
 
-export default function SpaceExplorer() {
+export default function SpaceExplorer({ isAdmin }: { isAdmin: boolean }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAnalysisPanelOpen, setIsAnalysisPanelOpen] = useState(false)
   const [selectedTile, setSelectedTile] = useState<TileMetadata | null>(null)
+  const [selectedTileUrl, setSelectedTileUrl] = useState<string | null>(null)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isUploadOpen, setIsUploadOpen] = useState(false)
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false)
+
+  // Celestial object info (from metadata)
+  const celestialObject = {
+    name: "Andromeda Galaxy",
+    type: "Spiral Galaxy"
+  }
+
+  // Handle tile click
+  const handleTileClick = useCallback((tileMetadata: TileMetadata, zoomLevel: number) => {
+    console.log('Tile selected:', tileMetadata, 'at zoom level:', zoomLevel)
+
+    // Don't analyze empty tiles
+    if (tileMetadata.content.is_empty) {
+      toast.info("Empty Tile", {
+        description: "This tile contains no significant astronomical data to analyze.",
+        duration: 3000,
+      })
+      return
+    }
+
+    setSelectedTile(tileMetadata)
+    setSelectedTileUrl(tileMetadata.url)
+    setIsAnalysisPanelOpen(true)
+
+    toast.success("Tile Selected", {
+      description: `Position: Col ${tileMetadata.position.col}, Row ${tileMetadata.position.row}`,
+      duration: 3000,
+    })
+  }, [])
+
+  // Handle AI analysis - Convierte imagen a base64 en el cliente
+  const handleAnalyze = useCallback(async (
+    tileUrl: string,
+    metadata: TileMetadata,
+    celestialObject?: any
+  ): Promise<string> => {
+    try {
+      // Fetch la imagen desde el cliente
+      const response = await fetch(tileUrl)
+      if (!response.ok) {
+        throw new Error('Failed to load tile image')
+      }
+      
+      const blob = await response.blob()
+      
+      // Convertir a base64
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = async () => {
+          try {
+            const base64 = reader.result as string
+            const base64Data = base64.split(',')[1] // Remover prefijo data:image/...
+            
+            // Llamar al server action con base64
+            const result = await analyzeTileWithAI({
+              tileUrl: base64Data, // Pasar base64 en lugar de URL
+              tileMetadata: {
+                position: metadata.position,
+                content: metadata.content,
+                dimensions: metadata.dimensions,
+                originalCoords: metadata.content.original_coords
+              },
+              celestialObject
+            })
+
+            toast.success("Analysis Complete", {
+              description: "AI has finished analyzing the tile fragment.",
+              duration: 3000,
+            })
+
+            resolve(result)
+          } catch (error) {
+            toast.error("Analysis Failed", {
+              description: error instanceof Error ? error.message : "Unknown error occurred",
+              duration: 5000,
+            })
+            reject(error)
+          }
+        }
+        reader.onerror = () => {
+          reject(new Error('Failed to read image file'))
+        }
+        reader.readAsDataURL(blob)
+      })
+    } catch (error) {
+      toast.error("Failed to Load Tile", {
+        description: "Could not read the tile image for analysis",
+        duration: 5000,
+      })
+      throw error
+    }
+  }, [])
+
+  // Menu handlers
+  const handleMenuItemClick = useCallback((item: string) => {
+    switch (item) {
+      case "home":
+        toast.info("View Reset", {
+          description: "Returning to initial view of the cosmos"
+        })
+        break
+      case "about":
+        toast.info("Eyes of God - Space Explorer", {
+          description: "Explore gigapixel astronomical images with AI-powered analysis"
+        })
+        break
+      default:
+        toast.info(`Feature: ${item}`, {
+          description: "This feature is coming soon"
+        })
+    }
+  }, [])
 
   return (
-    <SpaceRender
-      tilesBasePath="/tiles/andromeda"
-      initialZoom={2}
-      showDebugInfo={true}
-      onTileClick={(tileMetadata, zoomLevel) => {
-        console.log('Tile clicked:', tileMetadata)
-        console.log('Zoom level:', zoomLevel)
-        setSelectedTile(tileMetadata)
-      }}
-      onTileHover={(tileMetadata) => {
-        if (tileMetadata) {
-          console.log('Hovering tile at:', tileMetadata.position)
-        }
-      }}
-    >
-      {/* Panel lateral de información cuando se selecciona un tile */}
-      {selectedTile && (
-        <div className="absolute top-1/2 right-6 transform -translate-y-1/2 bg-black/80 backdrop-blur-sm p-6 rounded-lg border border-cyan-400/50 text-white z-50 max-w-md">
-          <button
-            onClick={() => setSelectedTile(null)}
-            className="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors"
-          >
-            ✕
-          </button>
-          
-          <h3 className="text-xl font-bold mb-4 text-cyan-400">Detalle del Tile</h3>
-          
-          <div className="space-y-3 text-sm">
-            <div>
-              <span className="text-gray-400">Posición en Grid:</span>
-              <div className="font-mono mt-1">
-                Columna: {selectedTile.position.col} | Fila: {selectedTile.position.row}
-              </div>
-            </div>
-            
-            <div>
-              <span className="text-gray-400">Coordenadas en Imagen Original:</span>
-              <div className="font-mono mt-1">
-                X: {selectedTile.content.original_coords.x}px
-                <br />
-                Y: {selectedTile.content.original_coords.y}px
-                <br />
-                Tamaño: {selectedTile.content.original_coords.width}x{selectedTile.content.original_coords.height}px
-              </div>
-            </div>
-            
-            <div>
-              <span className="text-gray-400">Análisis de Contenido:</span>
-              <div className="mt-1">
-                <div className="flex items-center gap-2">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
-                    style={{ 
-                      backgroundColor: selectedTile.content.is_empty ? '#ef4444' : '#10b981' 
-                    }}
-                  />
-                  <span>{selectedTile.content.is_empty ? 'Tile vacío' : 'Contiene datos'}</span>
-                </div>
-                <div className="mt-2">
-                  Brillo promedio: {selectedTile.content.avg_brightness.toFixed(2)}/255
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
-                  <div 
-                    className="bg-cyan-400 h-2 rounded-full transition-all"
-                    style={{ width: `${(selectedTile.content.avg_brightness / 255) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <span className="text-gray-400">Información del Archivo:</span>
-              <div className="font-mono mt-1 text-xs">
-                Tamaño: {(selectedTile.size / 1024).toFixed(2)} KB
-                <br />
-                Hash: {selectedTile.hash}
-                <br />
-                Ruta: {selectedTile.path}
-              </div>
-            </div>
-          </div>
-        </div>
+    <>
+      <SpaceRender
+        tilesBasePath="/tiles/andromeda"
+        initialZoom={2}
+        showDebugInfo={true}
+        onTileClick={handleTileClick}
+      >
+        {/* Floating Controls */}
+        <FloatingControls
+          isAdmin={isAdmin}
+          onSearchClick={() => setIsSearchOpen(true)}
+          onMenuClick={() => setIsMenuOpen(true)}
+          onUploadClick={() => setIsUploadOpen(true)}
+          onZoomIn={() => { }}
+          onZoomOut={() => { }}
+          onResetView={() => { }}
+          zoom={1}
+        />
+
+        {/* Navigation Menu */}
+        <NavigationMenu
+          isOpen={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
+          onMenuItemClick={handleMenuItemClick}
+        />
+
+        {/* Toast Notifications */}
+        <Toaster
+          theme="dark"
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "rgba(0, 0, 0, 0.9)",
+              border: "1px solid rgba(0, 217, 255, 0.3)",
+              color: "white",
+            },
+          }}
+        />
+      </SpaceRender>
+
+      {/* Search Panel */}
+      <SearchPanel
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
+
+      {/* Upload Panel (Admin only) */}
+      {isAdmin && (
+        <UploadPanel
+          isOpen={isUploadOpen}
+          onClose={() => setIsUploadOpen(false)}
+        />
       )}
-    </SpaceRender>
+
+      {/* Tile Analysis Panel - Fuera de SpaceRender para evitar z-index issues */}
+      <TileAnalysisPanel
+        isOpen={isAnalysisPanelOpen}
+        onClose={() => {
+          setIsAnalysisPanelOpen(false)
+          setSelectedTile(null)
+          setSelectedTileUrl(null)
+        }}
+        tileMetadata={selectedTile}
+        tileUrl={selectedTileUrl}
+        celestialObject={celestialObject}
+        onAnalyze={handleAnalyze}
+      />
+    </>
   )
 }

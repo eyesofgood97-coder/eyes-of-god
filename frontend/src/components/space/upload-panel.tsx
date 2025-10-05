@@ -16,7 +16,7 @@ import { Progress } from '../ui/progress';
 interface UploadPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpload: (data: any) => void;
+  onUpload?: (data: any) => void;
 }
 
 export function UploadPanel({ isOpen, onClose, onUpload }: UploadPanelProps) {
@@ -121,7 +121,7 @@ export function UploadPanel({ isOpen, onClose, onUpload }: UploadPanelProps) {
             featured: formData.visibility === 'featured'
           };
           
-          onUpload(uploadedData);
+          onUpload?.(uploadedData);
           onClose();
           
           // Reset form
