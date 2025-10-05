@@ -524,7 +524,7 @@ const SpaceRender = ({
 
       {/* Información del objeto celeste */}
       {metadata.celestial_object && (
-        <div className="absolute top-6 left-6 bg-black/50 backdrop-blur-sm px-4 py-3 rounded-lg border border-white/20 text-white z-50 max-w-xs">
+        <div className="absolute top-20 left-6 bg-black/50 backdrop-blur-sm px-4 py-3 rounded-lg border border-white/20 text-white z-50 max-w-xs">
           <h3 className="font-semibold text-lg mb-1">{metadata.celestial_object.name}</h3>
           <p className="text-xs text-gray-300">{metadata.celestial_object.type}</p>
           {metadata.celestial_object.catalog_id && (
@@ -546,7 +546,7 @@ const SpaceRender = ({
       </div>
 
       {/* Panel de información del tile hovereado */}
-      {hoveredTile && !showDebugInfo && (
+      {hoveredTile && (
         <div className="absolute top-20 left-6 bg-black/70 backdrop-blur-sm px-4 py-3 rounded-lg border border-cyan-400/30 text-white z-50 max-w-sm">
           <h4 className="font-semibold text-sm mb-2 text-cyan-400">Información del Tile</h4>
           <div className="text-xs space-y-1">
@@ -584,7 +584,7 @@ const SpaceRender = ({
 
       {/* Indicador de debug completo */}
       {showDebugInfo && currentZoomData && (
-        <div className="absolute top-6 right-6 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/20 text-white text-xs z-40 font-mono space-y-1">
+        <div className="absolute top-20 right-6 bg-black/70 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/20 text-white text-xs z-40 font-mono space-y-1">
           <div className="font-semibold text-cyan-400 mb-2">Debug Info</div>
           <div>Zoom Level: {zoom}</div>
           <div>Position: ({Math.round(position.x)}, {Math.round(position.y)})</div>

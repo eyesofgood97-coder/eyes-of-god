@@ -82,50 +82,6 @@ export function FloatingControls({
         </div>
       </motion.div>
 
-      {/* Bottom Right - Zoom Controls */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed bottom-6 right-6 z-50"
-      >
-        <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-full p-1 flex flex-col items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onZoomIn}
-            disabled={zoom >= 5}
-            className="text-white hover:text-cyan-400 hover:bg-white/10 h-8 w-8 p-0 disabled:opacity-50"
-          >
-            <ZoomIn className="h-4 w-4" />
-          </Button>
-          
-          <div className="text-white text-xs px-2 py-1">
-            {Math.round(zoom * 100)}%
-          </div>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onZoomOut}
-            disabled={zoom <= 0.1}
-            className="text-white hover:text-cyan-400 hover:bg-white/10 h-8 w-8 p-0 disabled:opacity-50"
-          >
-            <ZoomOut className="h-4 w-4" />
-          </Button>
-          
-          <div className="w-6 h-px bg-white/20 my-1" />
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onResetView}
-            className="text-white hover:text-cyan-400 hover:bg-white/10 h-8 w-8 p-0"
-          >
-            <Home className="h-4 w-4" />
-          </Button>
-        </div>
-      </motion.div>
-
       {/* Bottom Center - Timeline (Hidden by default, shows on hover) */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
