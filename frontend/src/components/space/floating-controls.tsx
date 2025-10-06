@@ -1,6 +1,7 @@
 import { Search, Menu, User, Plus } from 'lucide-react';
 import { Button } from '../ui/button';
 import { motion } from 'motion/react';
+import Link from 'next/link';
 
 interface FloatingControlsProps {
   isAdmin: boolean;
@@ -28,7 +29,9 @@ export function FloatingControls({
         className="fixed top-6 left-6 z-50 flex items-center gap-3"
       >
         <div className="bg-black/30 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 flex items-center gap-3">
-          <div className="text-cyan-400 font-bold text-lg">NASA</div>
+          <Link href={"./"}>
+            <div className="text-cyan-400 font-bold text-lg">NASA</div>
+          </Link>
           <div className="w-px h-6 bg-white/20" />
           <Button
             variant="ghost"
@@ -56,7 +59,7 @@ export function FloatingControls({
           >
             <Search className="h-4 w-4" />
           </Button>
-          
+
           {isAdmin && (
             <Button
               variant="ghost"
@@ -67,7 +70,7 @@ export function FloatingControls({
               <Plus className="h-4 w-4" />
             </Button>
           )}
-          
+
           <Button
             variant="ghost"
             size="sm"
@@ -93,7 +96,7 @@ export function FloatingControls({
             <span className="text-sm">2024</span>
           </div>
         </div>
-        
+
         {/* Hover trigger area */}
         <div className="absolute inset-x-0 -top-10 h-20" />
       </motion.div>
