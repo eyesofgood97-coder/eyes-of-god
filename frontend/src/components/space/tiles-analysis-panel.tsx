@@ -140,18 +140,18 @@ export function TileAnalysisPanel({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-[700px] bg-gradient-to-b from-black/95 to-black/98 backdrop-blur-xl border-l border-cyan-500/30 z-[70] flex flex-col shadow-2xl"
+            className="fixed right-0 top-0 h-full w-full md:w-[700px] bg-gradient-to-b from-black/95 to-black/98 backdrop-blur-xl border-l border-cyan-500/30 z-[70] flex flex-col shadow-2xl"
           >
             {/* Header */}
-            <div className="p-6 border-b border-white/10 bg-black/50">
+            <div className="p-4 md:p-6 border-b border-white/10 bg-black/50">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h2 className="text-2xl text-white flex items-center gap-3 font-bold">
-                    <Sparkles className="h-6 w-6 text-cyan-400" />
+                  <h2 className="text-xl md:text-2xl text-white flex items-center gap-3 font-bold">
+                    <Sparkles className="h-5 md:h-6 w-5 md:w-6 text-cyan-400" />
                     Tile Analysis
                   </h2>
                   {celestialObject && (
-                    <p className="text-sm text-cyan-300 mt-2 flex items-center gap-2">
+                    <p className="text-xs md:text-sm text-cyan-300 mt-2 flex items-center gap-2">
                       <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                       {celestialObject.name} • {celestialObject.type}
                     </p>
@@ -161,20 +161,20 @@ export function TileAnalysisPanel({
                   variant="ghost"
                   size="sm"
                   onClick={handleClose}
-                  className="text-white hover:text-cyan-400 hover:bg-white/10 h-10 w-10 p-0"
+                  className="text-white hover:text-cyan-400 hover:bg-white/10 h-8 md:h-10 w-8 md:w-10 p-0"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 md:h-5 w-4 md:w-5" />
                 </Button>
               </div>
             </div>
 
             {/* Tile Preview */}
-            <div className="p-6 border-b border-white/10 bg-gradient-to-b from-transparent to-black/30">
-              <div className="relative w-fit bg-black/80 rounded-xl overflow-hidden border-2 border-cyan-500/30 shadow-lg">
+            <div className="p-4 md:p-6 border-b border-white/10 bg-gradient-to-b from-transparent to-black/30">
+              <div className="relative w-fit bg-black/80 rounded-xl overflow-hidden border-2 border-cyan-500/30 shadow-lg mx-auto">
                 <img
                   src={tileUrl}
                   alt="Tile preview"
-                  className="object-contain"
+                  className="object-contain max-w-full"
                   onError={(e) => {
                     console.error('❌ Error loading tile image:', tileUrl)
                     e.currentTarget.style.display = 'none'
@@ -191,14 +191,14 @@ export function TileAnalysisPanel({
               </div>
 
               {/* Tile Info Grid */}
-              <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="mt-4 md:mt-6 grid grid-cols-2 gap-3 text-sm">
+                <div className="bg-white/5 rounded-lg p-2 border border-white/10">
                   <p className="text-gray-400 text-xs mb-1 uppercase tracking-wider">Position</p>
                   <p className="text-white font-mono text-base">
                     Col {tileMetadata.position.col}, Row {tileMetadata.position.row}
                   </p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="bg-white/5 rounded-lg p-2 border border-white/10">
                   <p className="text-gray-400 text-xs mb-1 uppercase tracking-wider">Brightness</p>
                   <p className="text-white font-mono text-base">
                     {tileMetadata.content.avg_brightness.toFixed(1)}/255
@@ -210,13 +210,13 @@ export function TileAnalysisPanel({
                     />
                   </div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="bg-white/5 rounded-lg p-2 border border-white/10">
                   <p className="text-gray-400 text-xs mb-1 uppercase tracking-wider">Dimensions</p>
                   <p className="text-white font-mono text-base">
                     {tileMetadata.dimensions.width} × {tileMetadata.dimensions.height}px
                   </p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="bg-white/5 rounded-lg p-2 border border-white/10">
                   <p className="text-gray-400 text-xs mb-1 uppercase tracking-wider">File Size</p>
                   <p className="text-white font-mono text-base">
                     {(tileMetadata.size / 1024).toFixed(1)} KB
@@ -229,16 +229,16 @@ export function TileAnalysisPanel({
                 <Button
                   onClick={handleAnalyze}
                   disabled={isAnalyzing}
-                  className="w-full mt-6 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-semibold py-6 text-base shadow-lg"
+                  className="w-full mt-4 md:mt-6 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-semibold py-4 md:py-6 text-sm md:text-base shadow-lg"
                 >
                   {isAnalyzing ? (
                     <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      <Loader2 className="h-4 md:h-5 w-4 md:w-5 mr-2 animate-spin" />
                       Analyzing with AI...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="h-5 w-5 mr-2" />
+                      <Sparkles className="h-4 md:h-5 w-4 md:w-5 mr-2" />
                       Analyze Tile with AI
                     </>
                   )}
@@ -249,9 +249,9 @@ export function TileAnalysisPanel({
             {/* Analysis Results */}
             <div className="flex-1 overflow-y-auto">
               {isAnalyzing && (
-                <div className="flex flex-col items-center justify-center h-full p-8">
-                  <Loader2 className="h-16 w-16 text-cyan-400 animate-spin mb-6" />
-                  <p className="text-white text-xl mb-3 font-semibold">Analyzing tile fragment...</p>
+                <div className="flex flex-col items-center justify-center h-full p-4 md:p-8">
+                  <Loader2 className="h-12 md:h-16 w-12 md:w-16 text-cyan-400 animate-spin mb-6" />
+                  <p className="text-white text-lg md:text-xl mb-3 font-semibold">Analyzing tile fragment...</p>
                   <p className="text-gray-400 text-sm text-center max-w-md leading-relaxed">
                     Our AI is examining this section of the space image for celestial objects,
                     phenomena, and scientific features
@@ -265,9 +265,9 @@ export function TileAnalysisPanel({
               )}
 
               {hasAnalyzed && analysisResult && (
-                <div className="p-6">
+                <div className="p-4 md:p-6">
                   {/* Action Buttons */}
-                  <div className="flex gap-2 mb-6">
+                  <div className="flex flex-col sm:flex-row gap-2 mb-6">
                     <Button
                       variant="outline"
                       size="sm"
@@ -289,12 +289,12 @@ export function TileAnalysisPanel({
                   </div>
 
                   {/* Analysis Result - Markdown rendering */}
-                  <div className="bg-white/5 rounded-xl p-6 border border-white/10 prose prose-invert prose-cyan max-w-none">
+                  <div className="bg-white/5 rounded-xl p-4 md:p-6 border border-white/10 prose prose-invert prose-cyan max-w-none">
                     <ReactMarkdown
                       components={{
-                        h1: ({ ...props }) => <h1 className="text-2xl font-bold text-white mb-4 mt-6 first:mt-0" {...props} />,
-                        h2: ({ ...props }) => <h2 className="text-xl font-semibold text-cyan-300 mb-3 mt-5" {...props} />,
-                        h3: ({ ...props }) => <h3 className="text-lg font-semibold text-cyan-400 mb-2 mt-4" {...props} />,
+                        h1: ({ ...props }) => <h1 className="text-xl md:text-2xl font-bold text-white mb-4 mt-6 first:mt-0" {...props} />,
+                        h2: ({ ...props }) => <h2 className="text-lg md:text-xl font-semibold text-cyan-300 mb-3 mt-5" {...props} />,
+                        h3: ({ ...props }) => <h3 className="text-base md:text-lg font-semibold text-cyan-400 mb-2 mt-4" {...props} />,
                         p: ({ ...props }) => <p className="text-gray-300 mb-3 leading-relaxed" {...props} />,
                         ul: ({ ...props }) => <ul className="list-disc list-inside text-gray-300 mb-3 space-y-1" {...props} />,
                         ol: ({ ...props }) => <ol className="list-decimal list-inside text-gray-300 mb-3 space-y-1" {...props} />,
@@ -319,12 +319,12 @@ export function TileAnalysisPanel({
               )}
 
               {!isAnalyzing && !hasAnalyzed && (
-                <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                <div className="flex flex-col items-center justify-center h-full p-4 md:p-8 text-center">
                   <div className="relative mb-6">
-                    <Sparkles className="h-20 w-20 text-cyan-400/30" />
-                    <Sparkles className="h-12 w-12 text-cyan-400/50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
+                    <Sparkles className="h-16 md:h-20 w-16 md:w-20 text-cyan-400/30" />
+                    <Sparkles className="h-10 md:h-12 w-10 md:w-12 text-cyan-400/50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
                   </div>
-                  <p className="text-white text-xl mb-3 font-semibold">Ready to Analyze</p>
+                  <p className="text-white text-lg md:text-xl mb-3 font-semibold">Ready to Analyze</p>
                   <p className="text-gray-400 text-sm max-w-md leading-relaxed">
                     Click the <span className="text-cyan-400 font-semibold">Analyze Tile with AI</span> button above to start a detailed
                     astronomical analysis of this tile fragment using advanced AI

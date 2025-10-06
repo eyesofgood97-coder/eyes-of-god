@@ -69,12 +69,12 @@ export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPa
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-[450px] bg-gradient-to-b from-black/90 to-black/95 backdrop-blur-xl border-l border-cyan-500/30 z-50 flex flex-col"
+            className="fixed right-0 top-0 h-full w-full md:w-[450px] bg-gradient-to-b from-black/90 to-black/95 backdrop-blur-xl border-l border-cyan-500/30 z-50 flex flex-col"
           >
             {/* Header */}
-            <div className="p-6 border-b border-white/10">
+            <div className="p-4 md:p-6 border-b border-white/10">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl text-white">Explorar el Universo</h2>
+                <h2 className="text-lg md:text-xl text-white">Explorar el Universo</h2>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -98,7 +98,7 @@ export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPa
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
               {/* Quick Filters */}
               <div>
                 <h3 className="text-sm text-gray-300 mb-3 flex items-center gap-2">
@@ -164,7 +164,7 @@ export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPa
                   </Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-3 mt-3">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Input
                       placeholder="RA (h:m:s)"
                       className="bg-white/5 border-white/20 text-white placeholder:text-gray-400"
@@ -217,7 +217,7 @@ export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPa
                       }}
                     >
                       <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center border border-white/10">
+                        <div className="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center border border-white/10 flex-shrink-0">
                           <span className="text-lg">
                             {image.type === 'planet' && '🪐'}
                             {image.type === 'galaxy' && '🌌'}
@@ -254,7 +254,7 @@ export function SearchPanel({ isOpen, onClose, onImageSelect, images }: SearchPa
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-white/10">
+            <div className="p-4 md:p-6 border-t border-white/10">
               <Button className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white">
                 Aplicar Filtros
               </Button>
