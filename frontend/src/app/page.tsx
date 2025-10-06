@@ -10,13 +10,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-20">
-        <HeroSection />
-        <DescriptionSection />
-        <ObjectSection />
-        <AnimatedFeaturesSection />
-        <TeamSection />
-      </main>
+
+      <HeroSection />
+      <DescriptionSection />
+      <ObjectSection />
+      <AnimatedFeaturesSection />
+      <TeamSection />
+
       <Footer />
     </div>
   );

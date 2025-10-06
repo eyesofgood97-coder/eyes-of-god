@@ -330,7 +330,7 @@ export function ParticleTextEffect({
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     const centerX = (rect.width / 2) * scaleX;
-    const centerY = (rect.height / 2.6) * scaleY;
+    const centerY = (rect.height / 2) * scaleY;
 
     const blackHoleRadius =
       Math.min(canvas.width, canvas.height) * (isMobile ? 0.22 : 0.25);
